@@ -1,0 +1,29 @@
+# Library Requirements File
+
+################## Default Libraries Used - Python 2.7 
+
+# SYSTEM -- DefaultLib
+#sys
+
+# OS -- DefaultLib
+#os
+
+# socket  -- DefaultLib
+#socket
+
+# Regular Expression  -- DefaultLib
+#re
+
+# JSON  -- DefaultLib
+#json
+
+# HTTP LIB
+#requests
+ 
+#################### Custom Libraries Used
+
+# whois - To obtain the whois information
+ipwhois
+
+
+
