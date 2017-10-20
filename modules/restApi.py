@@ -28,11 +28,26 @@ class httpRequest:
             headers = {'Content-Type':'text/html'}
         if str(type).lower() == "json":
             headers = {'Content-Type':'application/json', 'Accept':'application/json'}
+            try:
+              response = requests.get(self.url, headers=headers)
+            except:
+              print "Get Request to the url " + str(self.url) + " failed!"
+        elif str(type) == "header":
             response = requests.get(self.url, headers=headers)
+            try:
+             return response.headers
+            except:
+              print "Get Request to the url " + str(self.url) + " failed!"
         else:
-            response = requests.get(self.url, headers)
+            try:
+              response = requests.get(self.url, headers)
+            except:
+              print "Get Request to the url " + str(self.url) + " failed!"
         if auth:
-            response = requests.get(self.url, auth)
+            try:
+             response = requests.get(self.url, auth)
+            except:
+              print "Get Request to the url " + str(self.url) + " failed!"
         try:
             self.get_response = response.json()
             return self.get_response
@@ -62,7 +77,7 @@ def main():
         testrequest = httpRequest(testurl2)
         print testrequest.get_request(None, "json")
 
-main()
+#main()
 
 
 
