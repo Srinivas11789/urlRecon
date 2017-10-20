@@ -20,41 +20,47 @@ import requests # Rest Api Library
 import json
 
 class httpRequest:
+    def __init__(self, url):
+        self.url = url
 # Handle to make HTTP GET Request and return a JSON output
-    def get_request(self, url, headers=None, type=None, auth=None):
+    def get_request(self, headers=None, type=None, auth=None):
         if not headers:
             headers = {'Content-Type':'text/html'}
         if str(type).lower() == "json":
             headers = {'Content-Type':'application/json', 'Accept':'application/json'}
-            response = requests.get(url, headers=headers)
+            response = requests.get(self.url, headers=headers)
         else:
-            response = requests.get(url, headers)
+            response = requests.get(self.url, headers)
         if auth:
-            response = requests.get(url, auth)
+            response = requests.get(self.url, auth)
         try:
-            return response.json()
+            self.get_response = response.json()
+            return self.get_response
         except ValueError as e:
             if str(e).lower().strip() == "no json object could be decoded":
-                return response.text
+                self.get_response = response.text
+                return self.get_response
             else:
-                print "Get Request to the url "+str(url)+" failed!"
+                print "Get Request to the url "+str(self.url)+" failed!"
 
 # Handle to make HTTP POST Request and return a JSON output
-    def post_request(url, auth=None, body=None):
-        response = requests.post(url, data=body, auth=auth)
-        return response
+    def post_request(self, auth=None, body=None):
+        response = requests.post(self.url, data=body, auth=auth)
+        self.post_response = response.text
+        return self.post_response
 
 # Handle to make HTTP Delete Requests
-    def delete_request(url, auth=None):
-        response = requests.delete(url, auth=auth)
-        return response.json()
+    def delete_request(self, auth=None):
+        response = requests.delete(self.url, auth=auth)
+        self.delete_response = response.text
+        return self.delete_response
 
 # Function Driver - To Test the restApi Module Functions
 def main():
         testurl  = "http://isis.poly.edu/~marcbudofsky/cs6963-fall2016/URLs"
         testurl2 = "http://whois.arin.net/rest/poc/NYU-ARIN"
-        testrequest = httpRequest()
-        print testrequest.get_request(testurl2, None, "json")
+        testrequest = httpRequest(testurl2)
+        print testrequest.get_request(None, "json")
 
 main()
 
