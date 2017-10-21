@@ -60,11 +60,18 @@ class domainInfo:
             return ""
 
     def whois_info_fetch(self):
+       whois_data = {}
        try:
          whois_info = ipwhois.IPWhois(self.ip).lookup_rdap()
+         whois_data["IpWhoIsResult"] = whois_info
        except:
-         whois_info = None
-       return whois_info
+           whois_data["IpWhoIsResult"] = ""
+       try:
+           whois_info = restApi.httpRequest("https://www.whois.com/whois/"+self.domain).get_request(None, "json")
+           whois_data["WhoIsComResult"] = whois_info
+       except:
+           whois_data["IpWhoIsResult"] = ""
+       return whois_data
 
     def dns_info_fetch(self):
         dns_data = []
@@ -79,7 +86,16 @@ class domainInfo:
     def server_fingerprint(self, domain):
         # Make a Get Request and Receive the headers
         server_get_query = restApi.httpRequest(domain).get_request(None, "header")
-        return server_get_query['server']
+        try:
+         return server_get_query['server']
+        except:
+          try:
+              server_delete_query = restApi.httpRequest(domain).delete_request(None, "header")
+              print "Here!!!!!!!"
+              print server_delete_query
+              return server_delete_query['server']
+          except:
+              return None
 
     def geo_locate(self):
         geolocate_api_service_1 = "http://www.freegeoip.net/json/" + self.ip
@@ -92,10 +108,13 @@ class domainInfo:
 def main():
     #domain = "http://play.plaidctf.com/"
     domain = "http://nuitduhack.com/"
+    domain = "https://www.derbycon.com"
+    domain = "https://www.defcon.org/"
+    domain = "https://drive.google.com"
     domain_info = domainInfo(domain)
     print domain_info.domain
     print domain_info.ip
-    print domain_info.whois
+    print json.dumps(domain_info.whois, indent = 4, sort_keys = True)
     print domain_info.dns
     print domain_info.server_fingerprint
     print domain_info.geolocation

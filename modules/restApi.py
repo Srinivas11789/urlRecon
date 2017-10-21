@@ -25,38 +25,55 @@ class httpRequest:
 # Handle to make HTTP GET Request and return a JSON output
     def get_request(self, headers=None, type=None, auth=None):
         if not headers:
-            headers = {'Content-Type':'text/html'}
+            headers = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:32.0) Gecko/20100101 Firefox/32.0',}
         if str(type).lower() == "json":
             headers = {'Content-Type':'application/json', 'Accept':'application/json'}
             try:
               response = requests.get(self.url, headers=headers)
+              try:
+               return response.json()
+              except ValueError as e:
+                  if str(e).lower().strip() == "no json object could be decoded":
+                      self.get_response = response.text
+                      return self.get_response
+                  else:
+                      print "Get Request to the url " + str(self.url) + " failed!"
             except:
               print "Get Request to the url " + str(self.url) + " failed!"
+        # Fingerprint Call - Only the header retireval
         elif str(type) == "header":
-            response = requests.get(self.url, headers=headers)
             try:
-             return response.headers
-            except:
+                response = requests.get(self.url, headers=headers)
+                return response.headers
+            except Exception as e:
+                try:
+                 if "ssl" in str(e.message).lower():
+                    http_url = self.url
+                    http_url = http_url.replace("https", "http")
+                    print http_url
+                    response = requests.get(http_url, headers=headers, allow_redirects=False)
+                    print response
+                    print response.headers
+                    return response.headers
+                 else:
+                    response = requests.get(self.url, headers=headers, allow_redirects=False)
+                    return response.headers
+                except:
+                    return None
+            else:
               print "Get Request to the url " + str(self.url) + " failed!"
         else:
             try:
               response = requests.get(self.url, headers)
+              return response.text
             except:
               print "Get Request to the url " + str(self.url) + " failed!"
         if auth:
             try:
              response = requests.get(self.url, auth)
+             return response.text
             except:
               print "Get Request to the url " + str(self.url) + " failed!"
-        try:
-            self.get_response = response.json()
-            return self.get_response
-        except ValueError as e:
-            if str(e).lower().strip() == "no json object could be decoded":
-                self.get_response = response.text
-                return self.get_response
-            else:
-                print "Get Request to the url "+str(self.url)+" failed!"
 
 # Handle to make HTTP POST Request and return a JSON output
     def post_request(self, auth=None, body=None):
@@ -80,4 +97,6 @@ def main():
 #main()
 
 
-
+"""
+ if "https" in self.url:
+"""
