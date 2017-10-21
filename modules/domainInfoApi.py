@@ -67,10 +67,19 @@ class domainInfo:
        except:
            whois_data["IpWhoIsResult"] = ""
        try:
-           whois_info = restApi.httpRequest("https://www.whois.com/whois/"+self.domain).get_request(None, "json")
-           whois_data["WhoIsComResult"] = whois_info
+           whois_dict = {}
+           whois_info = restApi.httpRequest("https://www.whois.com/whois/"+self.domain).get_request()
+           html_strip = re.search('Raw.+?Whois.+?Data.+?Domain((.|\n)*)For.+?more.+?information', whois_info)
+           html_strip = str(html_strip.group(1)).replace("\n",",")
+           html_strip = html_strip.split(",")
+           for item in html_strip:
+               if ":" in item:
+                items = item.split(":")
+                whois_dict[items[0]] = items[1]
+           whois_data["WhoIsComResult"] = whois_dict
        except:
-           whois_data["IpWhoIsResult"] = ""
+           whois_data["WhoIsComResult"] = ""
+
        return whois_data
 
     def dns_info_fetch(self):
@@ -119,4 +128,4 @@ def main():
     print domain_info.server_fingerprint
     print domain_info.geolocation
 
-main()
+#main()
