@@ -1,23 +1,25 @@
-#######################################################################################################
-#
-#
-# 	 				                   REST API DRIVERS
-#
-# 				              AUTHOR: SRINIVAS PISKALA GANESH BABU
-#
-#				      DESCRIPTION:
-#                           The HTTP Rest Api Calls to Fetch data from a server \
-#                                       and return them in valid formats like Json and HTML-Data
-#
-#			          FUNCTIONS:
-#                           * getRequest
-#                           * postRequest
-#                           * deleteRequest
-#
-#########################################################################################################
+########################################################################################################
+#                                                                                                      #
+#                                                                                                      #
+# 	 				                   REST API DRIVERS                                                #
+#                                                                                                      #
+# 				      AUTHOR: SRINIVAS PISKALA GANESH BABU                                             #
+#                                                                                                      #
+#				      DESCRIPTION: (BASE MODULE)                                                       #
+#                           The HTTP Rest Api Calls to Fetch data from a server \                      #
+#                                       and return them in valid formats like Json and HTML-Data       #
+#                                                                                                      #
+#			          FUNCTIONS:                                                                       #
+#                           * getRequest    - Used extensively in the project                          #
+#                           * postRequest   - Provisions for a POST request                            #
+#                           * deleteRequest - Provisions for a DELETE request                          #
+#                                                                                                      #
+########################################################################################################
+
 # Import Statements for Libraries
-import requests # Rest Api Library
-import json
+import requests # HTTP/HTTP Request Handles -- Default Lib
+import json     # Handling JSON output      -- Default Lib
+
 
 class httpRequest:
     def __init__(self, url):

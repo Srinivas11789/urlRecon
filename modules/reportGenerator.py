@@ -6,14 +6,11 @@
 # 				      AUTHOR: SRINIVAS PISKALA GANESH BABU
 #
 #				      DESCRIPTION:
-#                           The HTTP Rest Api Calls to Fetch data from a server \
-#                              and return them in valid formats like Json and HTML-Data
+#
 #
 #			          FUNCTIONS:
 #                           * getRequest
-#                           * postRequest
-#                           * deleteRequest
-#                           *
+#
 #
 #########################################################################################################
 
