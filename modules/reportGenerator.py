@@ -31,7 +31,7 @@ import json
 
 # Report Gen Class holding all the report generator functions
 class reportGen():
-    def __init__(self, path, option=None ):
+    def __init__(self, path, option=None):
         # Report Folder Creation (Future Get the Report as Argument)
         self.directory = path+"/report"
         if not os.path.exists(self.directory):
