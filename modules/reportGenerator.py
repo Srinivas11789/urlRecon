@@ -18,36 +18,81 @@
 #########################################################################################################
 
 # Module
-import domainInfoApi
 
 # Custom or Third Party Module Imports
+# Kml File Gen
 import simplekml
+
+# OS
+import os # -- default Lib
+
+# SQL Lite Database
+import sqlite3
 
 # Report Gen Class holding all the report generator functions
 class reportGen():
-    def __init__(self, domainInfoApiObject):
+    def __init__(self, domainInfoApiObject, option, path):
         self.domainInfoObject = domainInfoApiObject
-        self.report = self.create_report()
-        self.database = self.create_database()
-        self.kmlfile = self.createkmlfile()
-
-
+        # Report Folder Creation (Future Get the Report as Argument)
+        self.directory = path+"/report"
+        if not os.path.exists(self.directory):
+            os.makedirs(self.directory)
+        if option == "kml":
+            self.kmlfile = self.createkmlfile()
+        elif option == "text":
+            self.report = self.create_report()
+        elif option == "sql":
+            self.database = self.create_database()
+        else:
+            self.report = self.create_report()
+            self.database = self.create_database()
+            self.kmlfile = self.createkmlfile()
 
 # Creation of Output folders
 # Report Text Creation and Handle return
     def create_report(self):
+        text_handle = open("report.txt","w")
+        return text_handle
 
     def create_database(self):
+        sql_handle = sqlite3.connect(self.directory + r"/" + r"urlInformation.db")
+        cur = sql_handle.cursor()
+        return cur
 
     def create_kmlfile(self):
+        kml_handle = simplekml.Kml()
+        return kml_handle
 
     def update_report(self):
+        self.report.write("URL: %s",self.domainInfoObjecturl)
+        self.report.write("\n"*3)
+        self.report.write("Domain: %s",self.domainInfoObject.domain)
+        self.report.write("\n"*3)
+        self.report.write("DNS: %s",self.domainInfoObject.dns)
+        self.report.write("\n"*3)
+        self.report.write("whoIs Data: %s",self.domainInfoObject.whois)
+        self.report.write("\n"*3)
+        self.report.write("Server Fingerprint: %s",self.domainInfoObject.server_fingerprint)
+        self.report.write("\n"*3)
+        self.report.write("Geo Location: %s",self.domainInfoObject.geolocation)
+        self.report.write("\n"*3)
 
     def update_database(self):
+        try:
+            self.database.execute("""CREATE TABLE urlData (Domain text, whoIsInfo text, dnsIp text, serverFingerprint text, geoLocation text)""")
+        except:
+            pass
+        self.database.execute("INSERT INTO urlData VALUES (?, ?, ?, ?, ?, ?)",(self.domainInfoObject.url, self.domainInfoObject.domain, self.domainInfoObject.ip, self.domainInfoObject.dns, self.domainInfoObject.whois, self.domainInfoObject.server_fingerprint, self.domainInfoObject.geolocation))
 
     def update_kmlfile(self):
+            self.kmlfile.newpoint(name=self.domainInfoObject.url, coords=[(self.domainInfoObject.geolocation['latitude'], self.domainInfoObject.geolocation['longitude'])])
 
     def close_all(self):
-
+        if self.report:
+            self.report.close()
+        if self.database:
+            self.database.close()
+        if self.kmlfile:
+            self.kmlfile.save('urlLocation.kml')
 
 

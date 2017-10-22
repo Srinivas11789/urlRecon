@@ -19,6 +19,9 @@
 
 # HTTP LIB
 #requests
+
+# SQL Database
+import sqlite3
  
 #################### Custom Libraries Used
 
@@ -28,7 +31,10 @@ ipwhois
 # dns - To obtain the dns information - ipwhois by default downloads this library
 dns
 
-#
+# KML File Generation
+import simplekml
+
+
 
 
 

@@ -34,6 +34,7 @@ import dns
 
 class domainInfo:
     def __init__(self, domain):
+        self.url = domain
         self.domain = self.domain_stripper(domain)
         self.ip = self.domain_ip_fetch()
         self.whois = self.whois_info_fetch()
