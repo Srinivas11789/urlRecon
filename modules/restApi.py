@@ -87,6 +87,13 @@ class httpRequest:
         return self.delete_response
 
 # Function Driver - To Test the restApi Module Functions
+# Test Driver Program for the module
+#     # Function Definition and Call commented to supress during project execution
+#     # Used for standalone module test
+#                   - Input    : Nothing - Url hardcoded
+#                   - Function : HTTP HTTPS Functions for GET POST DELETE
+#                   - Output   : Returns Output in Text/Html, JSON and Headers alone as well
+#
 def main():
         testurl  = "http://isis.poly.edu/~marcbudofsky/cs6963-fall2016/URLs"
         testurl2 = "http://whois.arin.net/rest/poc/NYU-ARIN"
@@ -95,7 +102,3 @@ def main():
 
 #main()
 
-
-"""
- if "https" in self.url:
-"""
