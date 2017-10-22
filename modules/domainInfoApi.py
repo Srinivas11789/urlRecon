@@ -1,23 +1,34 @@
-#######################################################################################################
-#
-#
-# 	 				               WHO IS Information Fetch handle
-#
-# 				      AUTHOR: SRINIVAS PISKALA GANESH BABU
-#
-#				      DESCRIPTION:
-#                           The HTTP Rest Api Calls to Fetch data from a server \
-#                              and return them in valid formats like Json and HTML-Data
-#
-#			          FUNCTIONS:
-#                           * getRequest
-#                           * postRequest
-#                           * deleteRequest
-#                           *
-#
-#########################################################################################################
+############################################################################################################
+#                                                                                                          #
+#                                                                                                          #
+# 	 				               Domain Information Fetch Module                                         #
+#                                                                                                          #
+# 				      AUTHOR: SRINIVAS PISKALA GANESH BABU                                                 #
+#                                                                                                          #
+#				      DESCRIPTION:                                                                         #
+#                           Creates an Class Object for the URL Input, Fetches the                         #
+#                            * Domain Name                                                                 #
+#                            * IP address                                                                  #
+#                            * DNS IP Information - A Record [Ipv4]                                        #
+#                            * Server Fingerprint                                                          #
+#                            * Geo Location of the Server                                                  #
+#                           Fills the Object and returns                                                   #
+#                                                                                                          #
+#			          FUNCTIONS:                                                                           #
+#                           * init - To fill the object with information                                   #
+#                           * domain_ip_fetch - To obtain the IP of the domain                             #
+#                           * domain_stripper - To strip the domain from the URL                           #
+#                           * whois_info_fetch - Fetch whois information from Domain as well as IP         #
+#                           * dns_info_fetch - Fetch the DNS IP record                                     #
+#                           * server_fingerprint - To obtain the server fingerprint from the header        #
+#                           * geo_locate - to locate the IP from a well known API                          #
+#                                                                                                          #
+############################################################################################################
+
 # Module Imports
+# RestApi module written and existing in the same folder
 import restApi
+
 # Import Statements for Libraries
 # JSON -- default lib
 import json
@@ -26,15 +37,21 @@ import socket
 # Regular Expression -- default lib
 import re
 # Custom Library Import
+# Warnings - to suppress UserWarnings in the output
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
-# Whois
+# Whois - Obtain the whois information from the IP
 import ipwhois
-# dns
+# dns - To obtain the dns info - by default installed by ipwhois
 import dns
 
-
+# Module Class Definition - "domainInfo" = Given a url, Returns an object with all domain information
 class domainInfo:
+    # Initialize Function
+    #               - Input    : Url of the domain
+    #               - Function : Class variable definitions and function calls
+    #               - Output   : Fills all the class parameters
+    #
     def __init__(self, domain):
         self.url = domain
         self.domain = self.domain_stripper(domain)
@@ -44,12 +61,20 @@ class domainInfo:
         self.server_fingerprint = self.server_fingerprint(domain)
         self.geolocation = self.geo_locate()
 
+    # domain_ip_fetch
+    #               - Input     : Domain Name
+    #               - Function  : Fetch Ip of the domain through sockets resolve
+    #               - Output    : returns the Ip address
     def domain_ip_fetch(self):
         try:
             return socket.gethostbyname(self.domain)
         except:
             print "Domain Resolving Error! Check the Connectivity!"
 
+    # domain_stripper
+    #                - Input     : Url
+    #                - Function  : strips the domain from the url given as input using regex
+    #                - Output    : Returns the Domain Name
     def domain_stripper(self,domain):
         if not re.match("^[a-zA-Z0-9._-]+\.[a-z]{3}",domain):
             extract_domain = re.search("^htt[a-z]+:\/\/([a-zA-Z0-9_.-]+)[/]?", domain)
@@ -63,6 +88,15 @@ class domainInfo:
             print "Url provided is invalid! \n"
             return ""
 
+    # whois_info_fetch
+    #                  - Input    : Domain Name and IP address
+    #                  - Function : Obtains the Whois Information for the given domain or IP
+    #                               * Domain
+    #                                 * Leverages restApi with "whois.com/whois" api call
+    #                               * IP
+    #                                 * Leverages the ipWhois python library to fetch info
+    #                  - Output   : Returns the whois data obtained from whois.com and ipwhois
+    #
     def whois_info_fetch(self):
        whois_data = {}
        try:
@@ -86,6 +120,12 @@ class domainInfo:
 
        return whois_data
 
+    # dns_info_fetch
+    #               - Input    : domain_name
+    #               - Function : Obtains the DNS information of IP address of the target domain
+    #                            Leverages the "dns" python library to fetch the dns ip address
+    #               - Output   : returns the DNS IP information
+    #
     def dns_info_fetch(self):
         dns_data = []
         try:
@@ -96,6 +136,12 @@ class domainInfo:
             pass
         return dns_data
 
+    # server_fingerprint
+    #             - Input    : url
+    #             - Function : HTTP - Obtains the server info from the response header
+    #                          HTTPS - Obtains the server info from the redirect as the SSL connect fails
+    #             - Output   : Server Key from the Header
+    #
     def server_fingerprint(self, domain):
         # Make a Get Request and Receive the headers
         server_get_query = restApi.httpRequest(domain).get_request(None, "header")
@@ -108,6 +154,10 @@ class domainInfo:
           except:
               return None
 
+    # geo_locate
+    #           - Input   : domain name of the server/url
+    #           - Function: Geo locates the Domain from the "freegeoip" or "geoipfree" domains
+    #           - Returns : JSON of all the location information
     def geo_locate(self):
         location = None
         try:
@@ -121,7 +171,13 @@ class domainInfo:
 
 
 
-# Driver Program for the module
+# Test Driver Program for the module
+#     # Function Definition and Call commented to supress during project execution
+#     # Used for standalone module test
+#                   - Input    : Nothing
+#                   - Function : Creates class object adn Retrieves all the object information
+#                   - Output   : Prints the domain information to the standard out
+#
 def main():
     #domain = "http://play.plaidctf.com/"
     domain = "http://nuitduhack.com/"
