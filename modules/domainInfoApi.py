@@ -27,7 +27,7 @@ import socket
 import re
 # Custom Library Import
 import warnings
-warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=UserWarning)
 # Whois
 import ipwhois
 # dns

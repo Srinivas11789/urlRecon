@@ -16,6 +16,9 @@ import restApi
 import domainInfoApi
 import reportGenerator
 
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
+
 def main():
 # Argument Fetch from the User
     if len(sys.argv) != 2:
