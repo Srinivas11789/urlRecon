@@ -51,19 +51,30 @@ class reportGen():
 # Creation of Output folders
 # Report Text Creation and Handle return
     def create_report(self):
-        text_handle = open("report.txt","w")
-        return text_handle
+        try:
+          text_handle = open(self.directory+"/report.txt","w")
+          return text_handle
+        except Exception as e:
+            print "Could not create the report text file !!!!! Please debug error %s" % (str(e.message))
 
     def create_database(self):
-        sql_handle = sqlite3.connect(self.directory + r"/" + r"urlInformation.db")
-        cur = sql_handle.cursor()
-        return cur
+        try:
+         sql_handle = sqlite3.connect(self.directory + r"/" + r"urlInformation.db")
+         cur = sql_handle.cursor()
+         return cur
+        except Exception as e:
+            print "Could not create the report database !!!!! Please debug error %s" % (str(e.message))
 
     def create_kmlfile(self):
-        kml_handle = simplekml.Kml()
-        return kml_handle
+        try:
+            kml_handle = simplekml.Kml()
+            return kml_handle
+        except Exception as e:
+            print "Could not create the kml file !!!!! Please debug error %s" % (str(e.message))
 
     def update_report(self):
+        self.report.write("=="*50)
+        self.report.write("\n"*3)
         self.report.write("URL: %s",self.domainInfoObjecturl)
         self.report.write("\n"*3)
         self.report.write("Domain: %s",self.domainInfoObject.domain)
@@ -93,6 +104,6 @@ class reportGen():
         if self.database:
             self.database.close()
         if self.kmlfile:
-            self.kmlfile.save('urlLocation.kml')
+            self.kmlfile.save(self.directory + "/"+ 'urlLocation.kml')
 
 

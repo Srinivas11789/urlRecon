@@ -14,6 +14,7 @@ import sys
 sys.path.insert(0, 'modules/')
 import restApi
 import domainInfoApi
+import reportGenerator
 
 def main():
 # Argument Fetch from the User
@@ -28,7 +29,12 @@ def main():
 
 # Get the Whois Data of all the domains
     for url in urls_to_test:
-        whois_info = domainInfoApi.domainInfo(url)
+        domain_info = domainInfoApi.domainInfo(url)
+        reportGenerator.reportGen(domain_info)
+
+
+
+        """ DEBUG OUTPUT
         print whois_info.whois
         print "\n\n"
         print whois_info.domain
@@ -37,6 +43,7 @@ def main():
         print whois_info.dns
         print whois_info.server_fingerprint
         print whois_info.geolocation
+        """
 
 if __name__ == "__main__":
     main()
