@@ -98,13 +98,10 @@ class domainInfo:
         # Make a Get Request and Receive the headers
         server_get_query = restApi.httpRequest(domain).get_request(None, "header")
         try:
-         print server_get_query
          return server_get_query['server']
         except:
           try:
               server_delete_query = restApi.httpRequest(domain).delete_request(None, "header")
-              print "Here!!!!!!!"
-              print server_delete_query
               return server_delete_query['server']
           except:
               return None
@@ -113,7 +110,8 @@ class domainInfo:
         location = None
         try:
          if self.ip:
-           geolocate_api_service_1 = "http://www.freegeoip.net/json/" + self.ip
+           # Location Errors in Free GEO IP - "http://www.freegeoip.net/json/" migrated to geoipfree
+           geolocate_api_service_1 = "http://www.geoipfree.com/json/" + self.domain
            location = restApi.httpRequest(geolocate_api_service_1).get_request(None, "json")
         except:
             print "Location information not available !!!"
@@ -127,6 +125,7 @@ def main():
     domain = "http://nuitduhack.com/"
     domain = "https://www.derbycon.com"
     domain = "https://www.defcon.org/"
+    domain = "https://www.facebook.com/"
    # domain = "https://drive.google.com"
     domain_info = domainInfo(domain)
     print domain_info.domain

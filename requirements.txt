@@ -21,7 +21,7 @@
 #requests
 
 # SQL Database
-import sqlite3
+#sqlite3
  
 #################### Custom Libraries Used
 
@@ -29,10 +29,10 @@ import sqlite3
 ipwhois
 
 # dns - To obtain the dns information - ipwhois by default downloads this library
-dns
+#dns -- check name
 
 # KML File Generation
-import simplekml
+simplekml
 
 
 

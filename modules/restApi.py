@@ -50,10 +50,7 @@ class httpRequest:
                  if "ssl" in str(e.message).lower():
                     http_url = self.url
                     http_url = http_url.replace("https", "http")
-                    print http_url
                     response = requests.get(http_url, headers=headers, allow_redirects=False)
-                    print response
-                    print response.headers
                     return response.headers
                  else:
                     response = requests.get(self.url, headers=headers, allow_redirects=False)

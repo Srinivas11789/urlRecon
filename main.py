@@ -27,14 +27,24 @@ def main():
     urls_to_test = restApi.httpRequest(urls_file).get_request()
     urls_to_test = urls_to_test.split('\n')
 
+# Report Initiation
+
+    report = reportGenerator.reportGen(os.path.basename(os.path.dirname(os.path.realpath(__file__))))
+
 # Get the Whois Data of all the domains
     for url in urls_to_test:
+        print url
         domain_info = domainInfoApi.domainInfo(url)
-        reportGenerator.reportGen(domain_info)
+        report.push_data_to_report(domain_info)
+
+# Close Call
+    report.close_all()
+
+if __name__ == "__main__":
+    main()
 
 
-
-        """ DEBUG OUTPUT
+    """ DEBUG OUTPUT
         print whois_info.whois
         print "\n\n"
         print whois_info.domain
@@ -44,6 +54,3 @@ def main():
         print whois_info.server_fingerprint
         print whois_info.geolocation
         """
-
-if __name__ == "__main__":
-    main()
