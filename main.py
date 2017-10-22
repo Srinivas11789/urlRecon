@@ -5,6 +5,29 @@
 #                                                                                                                      #
 #                             AUTHOR: Srinivas Piskala Ganesh Babu                                                     #
 #                                                                                                                      #
+#                             DESCRIPTION:                                                                             #
+#                                * Driver Program - Connects and drives all the modules to execute the program         #
+#                                                                                                                      #
+#			                  FUNCTIONS:                                                                               #
+#                                * Main.py                                                                             #
+#                                  - Executes all the modules and provides cli output of the same                      #
+#                                  - Usage:                                                                            #
+#                "python main.py <url_to_fetch_input_list_to_test> <option_for_report> <output_path_of_report>"        #
+#                                                                                                                      #
+#                             ARGUMENTS:                                                                               #
+#                               * <url_to_fetch_input_list_to_test> - A url where all the urls to test can be fetched  #
+#                               * <option_for_report> - Output Type for Report                                         #
+#                                    * "Text" - For a text based report only                                           #
+#                                    *  "SQL" - For a SQL Databse of report                                            #
+#                                    *  "KML" - For a KML based report of geolocation                                  #
+#                               * <output_path_of_report> - Full path where the output shoule be created               #
+#                                                                                                                      #
+#                             MANDATORY:                                                                               #
+#                                    * <url_to_fetch_input_list_to_test>                                               #
+#                                                                                                                      #
+#                              DEFAULTS:                                                                               #
+#                                    * <option_for_report>     - Default to all types of output                        #
+#                                    * <output_path_of_report> - Defaults to current working directory                 #
 #                                                                                                                      #
 ########################################################################################################################
 # Import Libraries
@@ -22,8 +45,15 @@ import reportGenerator
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 
+
+# Main Function
+#               - Input       : Url List Arguments
+#               - Description : Executes all the modules and provides cli output of the same
+#               - Output      : Outputs the Report
+#
 def main():
 # Argument Fetch from the User
+    # Mandatory Argument Handle
     if len(sys.argv) < 2:
         print "Please enter only the URL for the List of URLs/Domains to Test!"
         print """
@@ -47,9 +77,12 @@ def main():
 +    * <output_path_of_report> - Defaults to current working directory                               +
 ======================================================================================================="""
         sys.exit()
+    # Variables se
     urls_file = sys.argv[1]
     option = None
     output_path = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
+
+    # Optional Arguments Handle
     if len(sys.argv) > 2:
         option = sys.argv[2]
         output_path = sys.argv[3]
@@ -64,8 +97,16 @@ def main():
             print "Option provided not recognized, proceed with option to output all type of report!\n"
 
 # Make Web Request to Fetch the List of urls
-    urls_to_test = restApi.httpRequest(urls_file).get_request()
-    urls_to_test = urls_to_test.split('\n')
+    try:
+      urls_to_test = restApi.httpRequest(urls_file).get_request()
+      urls_to_test = urls_to_test.split('\n')
+    except Exception as e:
+      end_time = datetime.datetime.utcnow()
+      print "\n"
+      print " ==> Exception: %s" % (str(e.message))
+      print " ==> Program ended at %s" % (str(end_time))
+      print " =========> Program Finished with Failure !!!\n"
+      sys.exit()
 
 # Report Initiation
     try:
@@ -111,9 +152,11 @@ def main():
     print " ==> Time for the Program to Complete Execution = %s" % (end_time - start_time)
     print " =========> Program Finished Successfully !!!\n"
 
+# Main Function Call
 if __name__ == "__main__":
     main()
 
+# Debug Output Commented
     """ DEBUG OUTPUT
         print whois_info.whois
         print "\n\n"

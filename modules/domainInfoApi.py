@@ -45,7 +45,10 @@ import ipwhois
 # dns - To obtain the dns info - by default installed by ipwhois
 import dns
 
+
+# domainInfo
 # Module Class Definition - "domainInfo" = Given a url, Returns an object with all domain information
+#
 class domainInfo:
     # Initialize Function
     #               - Input    : Url of the domain
@@ -76,6 +79,7 @@ class domainInfo:
     #                - Function  : strips the domain from the url given as input using regex
     #                - Output    : Returns the Domain Name
     def domain_stripper(self,domain):
+        # Regex to
         if not re.match("^[a-zA-Z0-9._-]+\.[a-z]{3}",domain):
             extract_domain = re.search("^htt[a-z]+:\/\/([a-zA-Z0-9_.-]+)[/]?", domain)
             if extract_domain.group(1):

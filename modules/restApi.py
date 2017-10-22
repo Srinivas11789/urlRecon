@@ -21,6 +21,10 @@ import requests # HTTP/HTTP Request Handles -- Default Lib
 import json     # Handling JSON output      -- Default Lib
 
 
+# httpRequest Class
+#               - Definition - Holds the restApi calls like get, post and delete
+#                            - Exposes API to make HTTP/HTTPS requests
+#
 class httpRequest:
     # Initialize Function
     #               - Input    : Url of the domain
@@ -80,13 +84,14 @@ class httpRequest:
                     return None
             else:
               print "Get Request to the url " + str(self.url) + " failed!"
-        # Default Call
+        # Default Call - HTML Text
         else:
             try:
               response = requests.get(self.url, headers)
               return response.text
             except:
               print "Get Request to the url " + str(self.url) + " failed!"
+        # Call with Authentication
         if auth:
             try:
              response = requests.get(self.url, auth)
