@@ -1,18 +1,19 @@
 #######################################################################################################
 #
 #
-# 	 				                   WHO IS Information Fetch handle
+# 	 				               WHO IS Information Fetch handle
 #
-# 				              AUTHOR: SRINIVAS PISKALA GANESH BABU
+# 				      AUTHOR: SRINIVAS PISKALA GANESH BABU
 #
 #				      DESCRIPTION:
 #                           The HTTP Rest Api Calls to Fetch data from a server \
-#                                       and return them in valid formats like Json and HTML-Data
+#                              and return them in valid formats like Json and HTML-Data
 #
 #			          FUNCTIONS:
 #                           * getRequest
 #                           * postRequest
 #                           * deleteRequest
+#                           *
 #
 #########################################################################################################
 # Module Imports
@@ -134,4 +135,4 @@ def main():
     print domain_info.server_fingerprint
     print domain_info.geolocation
 
-main()
+#main()

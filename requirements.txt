@@ -25,5 +25,11 @@
 # whois - To obtain the whois information
 ipwhois
 
+# dns - To obtain the dns information - ipwhois by default downloads this library
+dns
+
+#
+
+
 
 
