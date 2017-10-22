@@ -80,7 +80,7 @@ def main():
     # Variables se
     urls_file = sys.argv[1]
     option = None
-    output_path = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
+    output_path = os.getcwd()
 
     # Optional Arguments Handle
     if len(sys.argv) > 2:
