@@ -34,6 +34,10 @@ ipwhois
 # KML File Generation
 simplekml
 
+# warning - supress warnings
+warnings
+
+
 
 
 

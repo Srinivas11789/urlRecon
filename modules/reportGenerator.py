@@ -29,6 +29,9 @@ import os # -- default Lib
 # SQL Lite Database
 import sqlite3
 
+# JSON
+import json
+
 # Report Gen Class holding all the report generator functions
 class reportGen():
     def __init__(self, path, option=None ):
@@ -80,7 +83,7 @@ class reportGen():
             print "Could not create the kml file !!!!! Please debug error %s" % (str(e.message))
 
     def update_report(self, domainInfoObject):
-        self.report.write("=="*50)
+        self.report.write("=="*70)
         self.report.write("\n"*3)
         self.report.write("URL: %s" %domainInfoObject.url)
         self.report.write("\n"*3)
@@ -88,11 +91,11 @@ class reportGen():
         self.report.write("\n"*3)
         self.report.write("DNS: %s" % domainInfoObject.dns)
         self.report.write("\n"*3)
-        self.report.write("whoIs Data: %s" % domainInfoObject.whois)
+        self.report.write("whoIs Data: %s" % json.dumps(domainInfoObject.whois, indent = 2, sort_keys = True)) # domainInfoObject.whois
         self.report.write("\n"*3)
         self.report.write("Server Fingerprint: %s" % domainInfoObject.server_fingerprint)
         self.report.write("\n"*3)
-        self.report.write("Geo Location: %s" % domainInfoObject.geolocation)
+        self.report.write("Geo Location: %s" % json.dumps(domainInfoObject.geolocation, indent = 2, sort_keys = True))
         self.report.write("\n"*3)
 
     def update_database(self, domainInfoObject):

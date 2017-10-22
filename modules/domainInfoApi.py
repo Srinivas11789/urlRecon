@@ -26,6 +26,8 @@ import socket
 # Regular Expression -- default lib
 import re
 # Custom Library Import
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 # Whois
 import ipwhois
 # dns
