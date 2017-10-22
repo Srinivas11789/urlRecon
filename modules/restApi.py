@@ -22,19 +22,37 @@ import json     # Handling JSON output      -- Default Lib
 
 
 class httpRequest:
+    # Initialize Function
+    #               - Input    : Url of the domain
+    #               - Function : Class variable definitions
+    #               - Output   : Fills the Object with the variable
+    #
     def __init__(self, url):
         self.url = url
+
 # Handle to make HTTP GET Request and return a JSON output
+    # get_request Function
+    #               - Input    : Url, Headers, Type (Output = "JSON", "Header"), Authentication
+    #               - Function : Performs a HTTP/HTTPS Get Request with the Server
+    #                            - HTTP  - Normal HTTP GET Request
+    #                            - HTTPS - Ordinary Call
+    #                                     - If Fails due to SSL Error, HTTP Call with 301 Redirect Header is taken into account
+    #               - Output   : Returns the response based on the type - Json, Text or Header Output
+    #
     def get_request(self, headers=None, type=None, auth=None):
+        # Setting Default Headers - To anonymize the Request
         if not headers:
             headers = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:32.0) Gecko/20100101 Firefox/32.0',}
+        # Output Type JSON Loop
         if str(type).lower() == "json":
+            # Header Set to JSON Type
             headers = {'Content-Type':'application/json', 'Accept':'application/json'}
             try:
               response = requests.get(self.url, headers=headers)
               try:
                return response.json()
               except ValueError as e:
+                  # JSON Decoding Error
                   if str(e).lower().strip() == "no json object could be decoded":
                       self.get_response = response.text
                       return self.get_response
@@ -42,12 +60,13 @@ class httpRequest:
                       print "Get Request to the url " + str(self.url) + " failed!"
             except:
               print "Get Request to the url " + str(self.url) + " failed!"
-        # Fingerprint Call - Only the header retireval
+        # Server Fingerprint Call - Only the header retireval
         elif str(type) == "header":
             try:
                 response = requests.get(self.url, headers=headers)
                 return response.headers
             except Exception as e:
+                # SSL Error Handling - When SSL Error Occurs - Try HTTP call and capture the Redirect packet
                 try:
                  if "ssl" in str(e.message).lower():
                     http_url = self.url
@@ -61,6 +80,7 @@ class httpRequest:
                     return None
             else:
               print "Get Request to the url " + str(self.url) + " failed!"
+        # Default Call
         else:
             try:
               response = requests.get(self.url, headers)
@@ -75,12 +95,22 @@ class httpRequest:
               print "Get Request to the url " + str(self.url) + " failed!"
 
 # Handle to make HTTP POST Request and return a JSON output
+    # POST Function - Unused Function - Just a Provision
+    #               - Input    : Url, Authentication and Body
+    #               - Function : Performs HTTP Post Request
+    #               - Output   : Returns the response
+    #
     def post_request(self, auth=None, body=None):
         response = requests.post(self.url, data=body, auth=auth)
         self.post_response = response.text
         return self.post_response
 
 # Handle to make HTTP Delete Requests
+    # DELETE Function
+    #               - Input    : Url of the domain, Authentication
+    #               - Function : Performs a HTTP Delete Request
+    #               - Output   : Returns the Output
+    #
     def delete_request(self, auth=None):
         response = requests.delete(self.url, auth=auth)
         self.delete_response = response.text

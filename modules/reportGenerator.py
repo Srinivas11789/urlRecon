@@ -1,18 +1,20 @@
 #######################################################################################################
-#
-#
-# 	 				                        REPORT GENERATOR HANDLE
-#
-# 				      AUTHOR: SRINIVAS PISKALA GANESH BABU
-#
-#				      DESCRIPTION:
-#
-#
-#			          FUNCTIONS:
-#                           * getRequest
-#
-#
-#########################################################################################################
+#                                                                                                     #
+#                                                                                                     #
+# 	 				                  REPORT GENERATOR HANDLE                                         #
+#                                                                                                     #
+# 				      AUTHOR: SRINIVAS PISKALA GANESH BABU                                            #
+#                                                                                                     #
+#				      DESCRIPTION:                                                                    #
+#                           * Report Generation Class that takes DomainInfoObject as Input and        #
+#                             Fills the info in the reports of 3 types - text, kml and database sql   #
+#                                                                                                     #
+#			          FUNCTIONS:                                                                      #
+#                           * Init                                                                    #
+#                           * push_data_to_report                                                     #
+#                                                                                                     #
+#                                                                                                     #
+#######################################################################################################
 
 # Module
 
@@ -31,6 +33,11 @@ import json
 
 # Report Gen Class holding all the report generator functions
 class reportGen():
+    # Initialize Function
+    #               - Input    : Url of the domain
+    #               - Function : Class variable definitions and function calls
+    #               - Output   : Fills all the class parameters
+    #
     def __init__(self, path, option=None):
         # Report Folder Creation (Future Get the Report as Argument)
         self.directory = path+"/report"
@@ -46,6 +53,7 @@ class reportGen():
             self.report = self.create_report()
             self.database = self.create_database()
             self.kmlfile = self.create_kmlfile()
+        self.cursor = self.database.cursor()
 
     def push_data_to_report(self, domainInfoApiObject):
         if self.report:
@@ -67,8 +75,7 @@ class reportGen():
     def create_database(self):
         try:
          sql_handle = sqlite3.connect(self.directory + r"/" + r"urlInformation.db")
-         cur = sql_handle.cursor()
-         return cur
+         return sql_handle
         except Exception as e:
             print "Could not create the report database !!!!! Please debug error %s" % (str(e.message))
 
@@ -97,10 +104,10 @@ class reportGen():
 
     def update_database(self, domainInfoObject):
         try:
-            self.database.execute("""CREATE TABLE urlData (URL text, Domain text, IP text, dnsIp text, whoIsInfo text, serverFingerprint text, geoLocation text)""")
+            self.cursor.execute("""CREATE TABLE urlData (URL text, Domain text, IP text, dnsIp text, whoIsInfo text, serverFingerprint text, geoLocation text)""")
         except:
             pass
-        self.database.execute("INSERT INTO urlData VALUES (?, ?, ?, ?, ?, ?, ?)",(str(domainInfoObject.url), str(domainInfoObject.domain), str(domainInfoObject.ip), str(domainInfoObject.dns), str(domainInfoObject.whois), str(domainInfoObject.server_fingerprint), str(domainInfoObject.geolocation)))
+        self.cursor.execute("INSERT INTO urlData VALUES (?, ?, ?, ?, ?, ?, ?)",(str(domainInfoObject.url), str(domainInfoObject.domain), str(domainInfoObject.ip), str(domainInfoObject.dns), str(domainInfoObject.whois), str(domainInfoObject.server_fingerprint), str(domainInfoObject.geolocation)))
 
     def update_kmlfile(self, domainInfoObject):
             self.kmlfile.newpoint(name=domainInfoObject.url, coords=[(domainInfoObject.geolocation['latitude'], domainInfoObject.geolocation['longitude'])])
@@ -109,6 +116,7 @@ class reportGen():
         if self.report:
             self.report.close()
         if self.database:
+            self.database.commit()
             self.database.close()
         if self.kmlfile:
             self.kmlfile.save(self.directory + "/"+ 'urlLocation.kml')
