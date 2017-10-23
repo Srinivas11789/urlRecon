@@ -22,6 +22,9 @@
 
 # SQL Database
 #sqlite3
+
+# warning - supress warnings
+#warnings
  
 #################### Custom Libraries Used
 
@@ -34,8 +37,6 @@ ipwhois
 # KML File Generation
 simplekml
 
-# warning - supress warnings
-warnings
 
 
 
