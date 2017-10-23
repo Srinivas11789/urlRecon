@@ -17,9 +17,6 @@
 # JSON  -- DefaultLib
 #json
 
-# HTTP LIB
-requests
-
 # SQL Database
 #sqlite3
 
@@ -37,6 +34,9 @@ ipwhois
 # KML File Generation
 simplekml
 
+# Requests
+# HTTP LIB
+requests
 
 
 
