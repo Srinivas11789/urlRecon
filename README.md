@@ -8,3 +8,7 @@
 # Sample Output Screen:
 
 ![Alt text](/sample_output.png?raw=true "SampleOutput")
+
+# Help Text Screen:
+
+![Alt text](/help_screen.png?raw=true "HelpScreen")
