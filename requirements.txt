@@ -18,7 +18,7 @@
 #json
 
 # HTTP LIB
-#requests
+requests
 
 # SQL Database
 #sqlite3
