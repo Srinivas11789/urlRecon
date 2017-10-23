@@ -7,3 +7,4 @@
 
 # Sample Output Screen:
 
+![Alt text](/sample_output.png?raw=true "SampleOutput")
