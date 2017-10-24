@@ -156,7 +156,7 @@ class reportGen():
     #               - Output   : returns nothing
     #
     def update_kmlfile(self, domainInfoObject):
-            self.kmlfile.newpoint(name=domainInfoObject.url, coords=[(domainInfoObject.geolocation['latitude'], domainInfoObject.geolocation['longitude'])])
+            self.kmlfile.newpoint(name=domainInfoObject.url, coords=[(domainInfoObject.geolocation['longitude'], domainInfoObject.geolocation['latitude'])])
 
     # Close Calls
     #               - Input    : class object

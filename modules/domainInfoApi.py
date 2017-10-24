@@ -150,11 +150,11 @@ class domainInfo:
         # Make a Get Request and Receive the headers
         server_get_query = restApi.httpRequest(domain).get_request(None, "header")
         try:
-         return server_get_query['server']
+         return str(server_get_query)
         except:
           try:
               server_delete_query = restApi.httpRequest(domain).delete_request(None, "header")
-              return server_delete_query['server']
+              return str(server_delete_query)
           except:
               return None
 
