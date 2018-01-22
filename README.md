@@ -1,4 +1,4 @@
-# IpGeolocation
+# UrlRecon
 # Given a Url, Obtains
         * Whois information of the domain
         * DNS Details of the domain
