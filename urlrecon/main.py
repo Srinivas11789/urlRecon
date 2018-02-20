@@ -8,7 +8,7 @@
 #                             DESCRIPTION:                                                                             #
 #                                * Driver Program - Connects and drives all the modules to execute the program         #
 #                                                                                                                      #
-#			                  FUNCTIONS:                                                                               #
+#			      FUNCTIONS:                                                                               #                                                                                                                                #
 #                                * Main.py                                                                             #
 #                                  - Executes all the modules and provides cli output of the same                      #
 #                                  - Usage:                                                                            #
@@ -54,15 +54,15 @@ warnings.filterwarnings("ignore", category=UserWarning)
 def main():
 # Argument Fetch from the User
     # Mandatory Argument Handle
-    if len(sys.argv) < 2:
-        print "Please enter only the URL for the List of URLs/Domains to Test!"
+    if len(sys.argv) < 3:
+        print "Please enter only the Filename containing the URL or URL to obtain List of URLs/Domains to Test!"
         print """
 ======================================================================================================
 + Usage:                                                                                             +
-+    "python main.py <url_to_fetch_input_list_to_test> <option_for_report> <output_path_of_report>"  +
++    "python main.py <url_input_list_to_test> <option_for_report> <output_path_of_report>"           +
 +                                                                                                    +
 + Arguments:                                                                                         +
-+    * <url_to_fetch_input_list_to_test> - A url where all the urls to test can be fetched           +
++    * <urlinput_list_to_test> - A file with urls or url where all the urls to test can be fetched   +
 +    * <option_for_report> - Output Type for Report                                                  +
 +                            * "Text" - For a text based report only                                 +
 +                            *  "SQL" - For a SQL Databse of report                                  +
@@ -70,22 +70,22 @@ def main():
 +    * <output_path_of_report> - Full path where the output shoule be created                        +
 +                                                                                                    +
 + Mandatory:                                                                                         +
-+    * <url_to_fetch_input_list_to_test>                                                             +
++    * <url_input_list_to_test> with option f (filename) or u (url to obtain file)                   +
 +                                                                                                    +
 + FallBack to Defaults:                                                                              +
 +    * <option_for_report>     - Default to all types of output                                      +
 +    * <output_path_of_report> - Defaults to current working directory                               +
 ======================================================================================================="""
         sys.exit()
-    # Variables se
-    urls_file = sys.argv[1]
+    # Variables set
+    urls_file = sys.argv[2]
     option = None
     output_path = os.getcwd()
 
     # Optional Arguments Handle
-    if len(sys.argv) > 2:
-        option = sys.argv[2]
-        output_path = sys.argv[3]
+    if len(sys.argv) > 3:
+        option = sys.argv[3]
+        output_path = sys.argv[4]
         if option.lower() == "kml":
             option = "kml"
         elif option.lower() == "text":
@@ -98,8 +98,14 @@ def main():
 
 # Make Web Request to Fetch the List of urls
     try:
-      urls_to_test = restApi.httpRequest(urls_file).get_request()
-      urls_to_test = urls_to_test.split('\n')
+       if sys.argv[1] == "u":
+      		urls_to_test = restApi.httpRequest(urls_file).get_request()
+      		urls_to_test = urls_to_test.split()
+       elif sys.argv[1] == "f":
+		file_with_url = open(urls_file,"r")
+                urls_to_test = file_with_url.readlines()
+       else:
+             	raise ValueError('Option incorrect. Please mention the correct option. (f or u)')
     except Exception as e:
       end_time = datetime.datetime.utcnow()
       print "\n"

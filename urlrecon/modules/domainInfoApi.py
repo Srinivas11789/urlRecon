@@ -167,7 +167,7 @@ class domainInfo:
         try:
          if self.ip:
            # Location Errors in Free GEO IP - "http://www.freegeoip.net/json/" migrated to geoipfree
-           geolocate_api_service_1 = "http://www.geoipfree.com/json/" + self.domain
+           geolocate_api_service_1 = "http://freegeoip.net/json/" + self.domain
            location = restApi.httpRequest(geolocate_api_service_1).get_request(None, "json")
         except:
             print "Location information not available !!!"
