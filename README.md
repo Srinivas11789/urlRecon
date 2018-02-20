@@ -1,7 +1,7 @@
 # UrlRecon
 Reconnaissance or Social Engineering tool for any url 
 
-<img src="/logo.png" width="100" height="100" title="Logo">
+<img src="/logo.png" width="150" height="150" title="Logo">
 
 ### Goal of the tool:
 
@@ -13,7 +13,7 @@ Given a input Url, Obtains
 
 ### Demo
 
-![Alt text](/samples/demo.gif?raw=true "Demo")
+![Alt text](/samples/urlrecondemo.gif?raw=true "Demo")
 
 ### Problem:
 * Collecting information or Social engineering a particular url or domain for possible details for analysis
