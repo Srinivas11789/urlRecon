@@ -12,7 +12,6 @@ Given a input Url, Obtains
         * IP geolocation of the server
 
 ### Demo
-
 ![Alt text](/samples/urlrecondemo.gif?raw=true "Demo")
 
 ### Problem:
@@ -24,7 +23,9 @@ Given a input Url, Obtains
 * Collects whois information
 * provides the DNS details of the target server
 * provides a fingerprint of the server
-* fetches the geo location of the domain
+* fetches the geo location of the domain - with a kml file to visualize
+* Single click operation
+* Output in text file and db 
 
 ### Sample Output Screen:
 
