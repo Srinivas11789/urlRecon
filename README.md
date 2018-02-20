@@ -1,7 +1,7 @@
 # UrlRecon
 Reconnaissance or Social Engineering tool for any url 
 
-![Alt text](/logo.png?raw=true "Logo")
+<img src="/logo.png" width="100" height="100" title="Logo">
 
 ### Goal of the tool:
 
