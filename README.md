@@ -1,7 +1,7 @@
 # UrlRecon
 Reconnaissance or Social Engineering tool for any url 
 
-<img src="/logo.png" width="150" height="150" title="Logo">
+<img src="https://github.com/Srinivas11789/urlRecon/blob/master/logo.png" width="150" height="150" title="Logo">
 
 ### Goal of the tool:
 
@@ -12,7 +12,7 @@ Given a input Url, Obtains
         * IP geolocation of the server
 
 ### Demo
-![Alt text](/samples/urlrecondemo.gif?raw=true "Demo")
+<img src="https://github.com/Srinivas11789/urlRecon/blob/master/samples/urlrecondemo.gif" title="Demo">
 
 ### Problem:
 * Collecting information or Social engineering a particular url or domain for possible details for analysis
@@ -29,10 +29,10 @@ Given a input Url, Obtains
 
 ### Sample Output Screen:
 
-![Alt text](/samples/sample_output.png?raw=true "SampleOutput")
+<img src="https://github.com/Srinivas11789/urlRecon/blob/master/samples/sample_output.png" title="SampleOutput">
 
 ### Help Text Screen:
 
-![Alt text](/samples/help_screen.png?raw=true "HelpScreen")
+<img src="https://github.com/Srinivas11789/urlRecon/blob/master/samples/help_screen.png" title="HelpScreen">
 
 
