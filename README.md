@@ -3,6 +3,8 @@ Reconnaissance or Social Engineering tool for any url
 
 <img src="https://github.com/Srinivas11789/urlRecon/blob/master/logo.png" width="150" height="150" title="Logo">
 
+[![Build Status](https://travis-ci.org/Srinivas11789/urlRecon.svg?branch=master)](https://travis-ci.org/Srinivas11789/urlRecon)
+
 ### Goal of the tool:
 
 Given a input Url, Obtains
