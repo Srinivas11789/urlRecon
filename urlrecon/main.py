@@ -36,7 +36,12 @@ import sys  #-- default lib
 import datetime  #-- default lib
 
 # Import Custom Modules - Self created by the author
-sys.path.insert(0, 'modules/')
+
+if sys.path[0]:
+    sys.path.insert(0,sys.path[0]+'/modules/')
+else:
+    sys.path.insert(0, 'modules/')
+
 import restApi
 import domainInfoApi
 import reportGenerator
