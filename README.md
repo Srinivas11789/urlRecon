@@ -1,7 +1,7 @@
 # UrlRecon [![Build Status](https://travis-ci.org/Srinivas11789/urlRecon.svg?branch=master)](https://travis-ci.org/Srinivas11789/urlRecon)
 Reconnaissance or Social Engineering tool for any url 
 
-<img src="https://github.com/Srinivas11789/urlRecon/blob/master/logo.png" width="150" height="150" title="Logo">
+<img src="https://srinivas11789.github.io/urlRecon/logo.png" width="150" height="150" title="Logo">
 
 ### Goal of the tool:
 
