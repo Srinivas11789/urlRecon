@@ -1,4 +1,4 @@
-# UrlRecon [![Build Status](https://travis-ci.org/Srinivas11789/urlRecon.svg?branch=master)](https://travis-ci.org/Srinivas11789/urlRecon) [![Code Coverage](https://codecov.io/gh/codecov/urlRecon/branch/master/graph/badge.svg)](https://codecov.io/gh/codecov/urlRecon)
+# UrlRecon [![Build Status](https://travis-ci.org/Srinivas11789/urlRecon.svg?branch=master)](https://travis-ci.org/Srinivas11789/urlRecon) [![codecov](https://codecov.io/gh/Srinivas11789/urlRecon/branch/master/graph/badge.svg)](https://codecov.io/gh/Srinivas11789/urlRecon)
 Reconnaissance or Social Engineering tool for any url 
 
 <img src="https://srinivas11789.github.io/urlRecon/logo.png" width="150" height="150" title="Logo">
