@@ -166,8 +166,10 @@ class domainInfo:
         location = None
         try:
          if self.ip:
-           # Location Errors in Free GEO IP - "http://www.freegeoip.net/json/" migrated to geoipfree
-           geolocate_api_service_1 = "http://freegeoip.net/json/" + self.domain
+           # Preliminary research on geolocation ips ==> Reference: https://medium.com/@ipdata_co/what-is-the-best-commercial-ip-geolocation-api-d8195cda7027
+           # -->  using this as of now https://ipapi.co/8.8.8.8/json --> as no apikey and https is provided by default!
+           # Location Errors in Free GEO IP - "http://www.freegeoip.net/json/" migrated to geoipfree - This was depreceated! breaking builds!!!
+           geolocate_api_service_1 = "https://ipapi.co/" + self.ip + "/json"
            location = restApi.httpRequest(geolocate_api_service_1).get_request(None, "json")
         except:
             print "Location information not available !!!"

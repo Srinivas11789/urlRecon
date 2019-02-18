@@ -168,13 +168,14 @@ if __name__ == "__main__":
     main()
 
 # Debug Output Commented
-    """ DEBUG OUTPUT
-        print whois_info.whois
-        print "\n\n"
-        print whois_info.domain
-        print whois_info.ip
-        print whois_info.whois
-        print whois_info.dns
-        print whois_info.server_fingerprint
-        print whois_info.geolocation
-        """
+    """ 
+    DEBUG OUTPUT
+    print whois_info.whois
+    print "\n\n"
+    print whois_info.domain
+    print whois_info.ip
+    print whois_info.whois
+    print whois_info.dns
+    print whois_info.server_fingerprint
+    print whois_info.geolocation
+    """
