@@ -9,4 +9,4 @@ else:
 import subprocess
 
 def test_work_flow():
-    assert "Successfully" in (subprocess.check_output(["python", sys.path[0]+"main.py", "f", "examples/url_to_test.txt"]))
+    assert "Successfully" in (subprocess.check_output(["python", sys.path[0]+"main.py", "f", sys.path[0]+"/examples/url_to_test.txt"]))
