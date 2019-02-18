@@ -75,7 +75,7 @@ def main():
 +    * <output_path_of_report> - Full path where the output shoule be created                        +
 +                                                                                                    +
 + Mandatory:                                                                                         +
-+    * <url_input_list_to_test> with option f (filename) or u (url to obtain file)                   +
++    * <url_input_list_to_test> with option f (filename) or u (url to obtain urls list file)         +
 +                                                                                                    +
 + FallBack to Defaults:                                                                              +
 +    * <option_for_report>     - Default to all types of output                                      +
