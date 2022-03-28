@@ -14,7 +14,7 @@ def test_domain_info():
     domain_info = domainInfoApi.domainInfo(domain)
     assert(re.match("([0-9]{3}|[0-9]{2}|[0-9]{1})\.([0-9]{3}|[0-9]{2}|[0-9]{1})\.([0-9]{3}|[0-9]{2}|[0-9]{1})\.([0-9]{3}|[0-9]{2}|[0-9]{1})",domain_info.ip))
     assert "drive.google.com" == domain_info.domain
-    assert domain_info.whois["IpWhoIsResult"]["asn_description"] == "GOOGLE - Google LLC, US"
+    assert domain_info.whois["IpWhoIsResult"]["asn_description"] == "GOOGLE, US"
     assert (re.match("([0-9]{3}|[0-9]{2}|[0-9]{1})\.([0-9]{3}|[0-9]{2}|[0-9]{1})\.([0-9]{3}|[0-9]{2}|[0-9]{1})\.([0-9]{3}|[0-9]{2}|[0-9]{1})",domain_info.dns[0]))
     #print json.loads(domain_info.server_fingerprint)
     #assert domain_info.server_fingerprint['Content-Type'] == 'text/html'
