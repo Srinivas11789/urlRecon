@@ -129,14 +129,42 @@ test/
 
 ---
 
+## Makefile
+
+```
+make help         Show all available targets
+make install      Install dependencies
+make install-dev  Install dependencies + test/lint tools
+make lint         flake8 fatal errors only
+make lint-full    flake8 with style warnings
+make test         Run test suite (offline, no network needed)
+make test-cov     Run tests with coverage report
+make run          Scan samples/demo_urls.txt → ./output
+make demo         Record CLI demo GIF via VHS in Docker
+make clean        Remove output/, caches, .pyc files
+```
+
 ## Running tests
 
 ```bash
-pip install pytest pytest-cov
+make test
+# or directly:
 python3 -m pytest test/ -v
 ```
 
 Tests run entirely offline — all network calls are mocked with `unittest.mock`.
+
+## Recording the demo GIF
+
+The demo is recorded with [VHS](https://github.com/charmbracelet/vhs) running in Docker — nothing installs on your machine:
+
+```bash
+make demo
+# equivalent to:
+docker run --rm -v "$PWD":/vhs ghcr.io/charmbracelet/vhs demo.tape
+```
+
+The script is in `demo.tape`. Edit it to change the URLs, theme, or timing, then re-run `make demo` to regenerate `samples/urlrecondemo.gif`.
 
 ---
 

@@ -15,8 +15,9 @@ env/
 coverage.xml
 htmlcov/
 
-# Reports (tool output)
+# Reports / tool output
 report/
+output/
 
 # Distribution / packaging
 *.egg-info/
