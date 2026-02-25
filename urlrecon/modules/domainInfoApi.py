@@ -1,202 +1,181 @@
 ############################################################################################################
 #                                                                                                          #
 #                                                                                                          #
-# 	 				               Domain Information Fetch Module                                         #
+#                          Domain Information Fetch Module                                                 #
 #                                                                                                          #
-# 				      AUTHOR: SRINIVAS PISKALA GANESH BABU                                                 #
+#               AUTHOR: SRINIVAS PISKALA GANESH BABU                                                       #
 #                                                                                                          #
-#				      DESCRIPTION:                                                                         #
-#                           Creates an Class Object for the URL Input, Fetches the                         #
-#                            * Domain Name                                                                 #
-#                            * IP address                                                                  #
-#                            * DNS IP Information - A Record [Ipv4]                                        #
-#                            * Server Fingerprint                                                          #
-#                            * Geo Location of the Server                                                  #
-#                           Fills the Object and returns                                                   #
+#               DESCRIPTION:                                                                               #
+#                   Creates a class object for the URL input, fetches the:                                 #
+#                    * Domain Name                                                                         #
+#                    * IP address                                                                          #
+#                    * DNS IP Information - A Record [IPv4]                                                #
+#                    * Server Fingerprint                                                                  #
+#                    * Geo Location of the Server                                                          #
 #                                                                                                          #
-#			          FUNCTIONS:                                                                           #
-#                           * init - To fill the object with information                                   #
-#                           * domain_ip_fetch - To obtain the IP of the domain                             #
-#                           * domain_stripper - To strip the domain from the URL                           #
-#                           * whois_info_fetch - Fetch whois information from Domain as well as IP         #
-#                           * dns_info_fetch - Fetch the DNS IP record                                     #
-#                           * server_fingerprint - To obtain the server fingerprint from the header        #
-#                           * geo_locate - to locate the IP from a well known API                          #
+#               FUNCTIONS:                                                                                 #
+#                   * __init__          - Fill the object with information                                 #
+#                   * domain_ip_fetch   - Obtain the IP of the domain                                     #
+#                   * domain_stripper   - Strip the domain from the URL                                   #
+#                   * whois_info_fetch  - Fetch whois information from Domain and IP                       #
+#                   * dns_info_fetch    - Fetch the DNS IP record                                          #
+#                   * server_fingerprint - Obtain server fingerprint from headers                          #
+#                   * geo_locate        - Locate the IP via well-known API                                 #
 #                                                                                                          #
 ############################################################################################################
 
-# Module Imports
-# RestApi module written and existing in the same folder
-import restApi
-
-# Import Statements for Libraries
-# JSON -- default lib
 import json
-# SOCKET -- default lib
-import socket
-# Regular Expression -- default lib
+import logging
+import os
 import re
-# Custom Library Import
-# Warnings - to suppress UserWarnings in the output
+import socket
 import warnings
+
 warnings.filterwarnings("ignore", category=UserWarning)
-# Whois - Obtain the whois information from the IP
+
 import ipwhois
-# dns - To obtain the dns info - by default installed by ipwhois
-import dns
+import dns.resolver
+
+try:
+    from . import restApi
+except ImportError:
+    import restApi  # noqa: E402  (direct-script fallback)
+
+logger = logging.getLogger(__name__)
+
+# API endpoints
+IPAPI_URL = "https://ipapi.co/{ip}/json"
+IPAPI_KEY_URL = "https://ipapi.co/{ip}/json/?key={key}"
+WHOISCOM_URL = "https://www.whois.com/whois/{domain}"
 
 
-# domainInfo
-# Module Class Definition - "domainInfo" = Given a url, Returns an object with all domain information
-#
 class domainInfo:
-    # Initialize Function
-    #               - Input    : Url of the domain
-    #               - Function : Class variable definitions and function calls
-    #               - Output   : Fills all the class parameters
-    #
+    """Given a URL, returns an object containing all domain intelligence."""
+
     def __init__(self, domain):
-        self.url = domain
-        self.domain = self.domain_stripper(domain)
+        self.url = domain.strip()
+        self.domain = self.domain_stripper(self.url)
         self.ip = self.domain_ip_fetch()
         self.whois = self.whois_info_fetch()
         self.dns = self.dns_info_fetch()
-        self.server_fingerprint = self.server_fingerprint(domain)
+        self.server_fingerprint = self.server_fingerprint(self.url)
         self.geolocation = self.geo_locate()
 
-    # domain_ip_fetch
-    #               - Input     : Domain Name
-    #               - Function  : Fetch Ip of the domain through sockets resolve
-    #               - Output    : returns the Ip address
     def domain_ip_fetch(self):
+        """Resolve domain to IPv4 address via socket."""
         try:
             return socket.gethostbyname(self.domain)
-        except:
-            print "Domain Resolving Error! Check the Connectivity!"
+        except Exception as e:
+            logger.warning("Domain resolving error for %s: %s", self.domain, e)
+            return None
 
-    # domain_stripper
-    #                - Input     : Url
-    #                - Function  : strips the domain from the url given as input using regex
-    #                - Output    : Returns the Domain Name
-    def domain_stripper(self,domain):
-        # Regex to
-        if not re.match("^[a-zA-Z0-9._-]+\.[a-z]{3}",domain):
-            extract_domain = re.search("^htt[a-z]+:\/\/([a-zA-Z0-9_.-]+)[/]?", domain)
-            if extract_domain.group(1):
-                domain_name = extract_domain.group(1)
-                return domain_name
-            else:
-                print "Url provided is invalid! \n"
-                return ""
-        else:
-            print "Url provided is invalid! \n"
-            return ""
+    def domain_stripper(self, domain):
+        """Strip the bare hostname from a URL or plain domain string.
 
-    # whois_info_fetch
-    #                  - Input    : Domain Name and IP address
-    #                  - Function : Obtains the Whois Information for the given domain or IP
-    #                               * Domain
-    #                                 * Leverages restApi with "whois.com/whois" api call
-    #                               * IP
-    #                                 * Leverages the ipWhois python library to fetch info
-    #                  - Output   : Returns the whois data obtained from whois.com and ipwhois
-    #
+        Accepts:
+            - Full URLs: ``https://www.example.co.uk/path``
+            - Plain domains: ``www.example.com``
+
+        Returns:
+            Hostname string, or ``""`` if the input cannot be parsed.
+        """
+        # Plain hostname/domain (no scheme) — matches labels with dots and a
+        # TLD of 2 or more characters (fixes the original 3-char TLD limit).
+        if re.match(r"^[a-zA-Z0-9._-]+\.[a-z]{2,}$", domain.strip()):
+            return domain.strip()
+
+        # Full URL — extract the host portion after the scheme
+        extract_domain = re.search(r"^htt[a-z]+://([a-zA-Z0-9_.-]+)[/]?", domain)
+        if extract_domain and extract_domain.group(1):
+            return extract_domain.group(1)
+
+        logger.warning("URL provided is invalid: %s", domain)
+        return ""
+
     def whois_info_fetch(self):
-       whois_data = {}
-       try:
-         whois_info = ipwhois.IPWhois(self.ip).lookup_rdap()
-         whois_data["IpWhoIsResult"] = whois_info
-       except:
-           whois_data["IpWhoIsResult"] = ""
-       try:
-           whois_dict = {}
-           whois_info = restApi.httpRequest("https://www.whois.com/whois/"+self.domain).get_request()
-           html_strip = re.search('Raw.+?Whois.+?Data.+?Domain((.|\n)*)For.+?more.+?information', whois_info)
-           html_strip = str(html_strip.group(1)).replace("\n",",")
-           html_strip = html_strip.split(",")
-           for item in html_strip:
-               if ":" in item:
-                items = item.split(":")
-                whois_dict[items[0]] = items[1]
-           whois_data["WhoIsComResult"] = whois_dict
-       except:
-           whois_data["WhoIsComResult"] = ""
+        """Fetch WHOIS data for the domain's IP (via ipwhois) and from whois.com."""
+        whois_data = {}
 
-       return whois_data
+        try:
+            whois_info = ipwhois.IPWhois(self.ip).lookup_rdap()
+            whois_data["IpWhoIsResult"] = whois_info
+        except Exception as e:
+            logger.warning("IPWhois lookup failed for %s: %s", self.ip, e)
+            whois_data["IpWhoIsResult"] = ""
 
-    # dns_info_fetch
-    #               - Input    : domain_name
-    #               - Function : Obtains the DNS information of IP address of the target domain
-    #                            Leverages the "dns" python library to fetch the dns ip address
-    #               - Output   : returns the DNS IP information
-    #
+        try:
+            whois_dict = {}
+            raw = restApi.httpRequest(WHOISCOM_URL.format(domain=self.domain)).get_request()
+            if raw:
+                html_strip = re.search(
+                    r'Raw.+?Whois.+?Data.+?Domain((.|\n)*)For.+?more.+?information', raw
+                )
+                if html_strip:
+                    parts = str(html_strip.group(1)).replace("\n", ",").split(",")
+                    for item in parts:
+                        if ":" in item:
+                            key, _, val = item.partition(":")
+                            whois_dict[key] = val
+            whois_data["WhoIsComResult"] = whois_dict
+        except Exception as e:
+            logger.warning("whois.com lookup failed for %s: %s", self.domain, e)
+            whois_data["WhoIsComResult"] = ""
+
+        return whois_data
+
     def dns_info_fetch(self):
+        """Query A records for the domain."""
         dns_data = []
         try:
-            dns_info = dns.resolver.query(self.domain, 'A') # dns.rdatatype.ANY
+            dns_info = dns.resolver.resolve(self.domain, 'A')
             for rdata in dns_info:
                 dns_data.append(rdata.to_text())
-        except:
-            pass
+        except Exception as e:
+            logger.warning("DNS lookup failed for %s: %s", self.domain, e)
         return dns_data
 
-    # server_fingerprint
-    #             - Input    : url
-    #             - Function : HTTP - Obtains the server info from the response header
-    #                          HTTPS - Obtains the server info from the redirect as the SSL connect fails
-    #             - Output   : Server Key from the Header
-    #
     def server_fingerprint(self, domain):
-        # Make a Get Request and Receive the headers
-        server_get_query = restApi.httpRequest(domain).get_request(None, "header")
-        try:
-         return str(server_get_query)
-        except:
-          try:
-              server_delete_query = restApi.httpRequest(domain).delete_request(None, "header")
-              return str(server_delete_query)
-          except:
-              return None
+        """Return the response headers dict for the domain, or None on failure.
 
-    # geo_locate
-    #           - Input   : domain name of the server/url
-    #           - Function: Geo locates the Domain from the "freegeoip" or "geoipfree" domains
-    #           - Returns : JSON of all the location information
+        Tries HTTPS first; falls back to HTTP (with verify=False) for servers
+        that have certificate errors — common on internal/test hosts encountered
+        during recon.
+        """
+        headers = restApi.httpRequest(domain).get_request(None, "header")
+        if headers is not None:
+            return dict(headers)
+        # SSL / cert error fallback: retry with TLS verification disabled so
+        # we can still fingerprint servers with self-signed or expired certs.
+        try:
+            headers = restApi.httpRequest(domain).get_request(None, "header_noverify")
+            if headers is not None:
+                logger.warning("Server fingerprint for %s used verify=False (cert issue)", domain)
+                return dict(headers)
+        except Exception as e:
+            logger.warning("Server fingerprint failed for %s: %s", domain, e)
+        return None
+
     def geo_locate(self):
-        location = None
+        """Geo-locate the domain's IP via ipapi.co. Returns JSON dict or None.
+
+        Reads IPAPI_KEY from the environment for authenticated requests (removes
+        the 1,000 req/day free-tier rate limit).
+        """
+        if not self.ip:
+            return None
         try:
-         if self.ip:
-           # Preliminary research on geolocation ips ==> Reference: https://medium.com/@ipdata_co/what-is-the-best-commercial-ip-geolocation-api-d8195cda7027
-           # -->  using this as of now https://ipapi.co/8.8.8.8/json --> as no apikey and https is provided by default!
-           # Location Errors in Free GEO IP - "http://www.freegeoip.net/json/" migrated to geoipfree - This was depreceated! breaking builds!!!
-           geolocate_api_service_1 = "https://ipapi.co/" + self.ip + "/json"
-           location = restApi.httpRequest(geolocate_api_service_1).get_request(None, "json")
-        except:
-            print "Location information not available !!!"
-        return location
-
-
-
-# Test Driver Program for the module
-#     # Function Definition and Call commented to supress during project execution
-#     # Used for standalone module test
-#                   - Input    : Nothing
-#                   - Function : Creates class object adn Retrieves all the object information
-#                   - Output   : Prints the domain information to the standard out
-#
-def main():
-    #domain = "http://play.plaidctf.com/"
-    domain = "http://nuitduhack.com/"
-    domain = "https://www.derbycon.com"
-    domain = "https://www.defcon.org/"
-    domain = "https://www.facebook.com/"
-   # domain = "https://drive.google.com"
-    domain_info = domainInfo(domain)
-    print domain_info.domain
-    print domain_info.ip
-    print json.dumps(domain_info.whois, indent = 4, sort_keys = True)
-    print domain_info.dns
-    print domain_info.server_fingerprint
-    print domain_info.geolocation
-
-#main()
+            api_key = os.environ.get("IPAPI_KEY")
+            url = (
+                IPAPI_KEY_URL.format(ip=self.ip, key=api_key)
+                if api_key
+                else IPAPI_URL.format(ip=self.ip)
+            )
+            result = restApi.httpRequest(url).get_request(None, "json")
+            if isinstance(result, dict) and result.get("error"):
+                reason = result.get("reason", "unknown")
+                logger.warning("ipapi.co error for %s: %s", self.ip, reason)
+                return None
+            return result
+        except Exception as e:
+            logger.warning("Geolocation unavailable for %s: %s", self.ip, e)
+            return None

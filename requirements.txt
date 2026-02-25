@@ -1,46 +1,13 @@
-# Library Requirements File
+# urlRecon — Python 3.10+ dependencies
 
-################## Default Libraries Used - Python 2.7 
-
-# SYSTEM -- DefaultLib
-#sys
-
-# OS -- DefaultLib
-#os
-
-# socket  -- DefaultLib
-#socket
-
-# Regular Expression  -- DefaultLib
-#re
-
-# JSON  -- DefaultLib
-#json
-
-# SQL Database
-#sqlite3
-
-# warning - supress warnings
-#warnings
- 
-#################### Custom Libraries Used
-
-# whois - To obtain the whois information
+# WHOIS / ASN lookup
 ipwhois
 
-# dns - To obtain the dns information - ipwhois by default downloads this library
-#dns -- check name
+# DNS queries
+dnspython
 
-# KML File Generation
+# KML file generation
 simplekml
 
-# Requests
-# HTTP LIB
+# HTTP client
 requests
-
-
-
-
-
-
-
