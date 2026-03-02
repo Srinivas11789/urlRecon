@@ -56,7 +56,8 @@ run-kml:
 
 ## demo: Record CLI demo GIF using VHS in Docker (writes samples/urlrecondemo.gif)
 demo:
-	docker run --rm -v "$(PWD)":/vhs ghcr.io/charmbracelet/vhs demo.tape
+	docker build -f Dockerfile.demo -t urlrecon-vhs .
+	docker run --rm -v "$(PWD)":/vhs urlrecon-vhs demo.tape
 
 # ── Clean ─────────────────────────────────────────────────────────────────────
 
