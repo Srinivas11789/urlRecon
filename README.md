@@ -1,10 +1,10 @@
 # urlRecon
 
-[![Tests](https://github.com/Srinivas11789/urlRecon/actions/workflows/test.yml/badge.svg)](https://github.com/Srinivas11789/urlRecon/actions/workflows/test.yml)
-[![Security](https://github.com/Srinivas11789/urlRecon/actions/workflows/security.yml/badge.svg)](https://github.com/Srinivas11789/urlRecon/actions/workflows/security.yml)
-[![CodeQL](https://github.com/Srinivas11789/urlRecon/actions/workflows/codeql.yml/badge.svg)](https://github.com/Srinivas11789/urlRecon/actions/workflows/codeql.yml)
+[![Tests](https://github.com/srixivas/urlRecon/actions/workflows/test.yml/badge.svg)](https://github.com/srixivas/urlRecon/actions/workflows/test.yml)
+[![Security](https://github.com/srixivas/urlRecon/actions/workflows/security.yml/badge.svg)](https://github.com/srixivas/urlRecon/actions/workflows/security.yml)
+[![CodeQL](https://github.com/srixivas/urlRecon/actions/workflows/codeql.yml/badge.svg)](https://github.com/srixivas/urlRecon/actions/workflows/codeql.yml)
 
-<img src="https://srinivas11789.github.io/urlRecon/logo.png" width="150" height="150" title="Logo">
+<img src="https://srixivas.github.io/urlRecon/logo.png" width="150" height="150" title="Logo">
 
 Reconnaissance tool for URLs and domains. Given a list of targets, collects technical intelligence in a single pass and writes reports in three formats.
 
@@ -100,7 +100,7 @@ https://github.com/
 
 ## Demo
 
-<img src="https://github.com/Srinivas11789/urlRecon/blob/master/samples/urlrecondemo.gif" title="Demo">
+<img src="https://github.com/srixivas/urlRecon/blob/master/samples/urlrecondemo.gif" title="Demo">
 
 ---
 
